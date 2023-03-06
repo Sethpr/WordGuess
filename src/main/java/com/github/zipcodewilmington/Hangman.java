@@ -1,6 +1,6 @@
 package com.github.zipcodewilmington;
 
-
+//Seth Prentice
 /**
  * @author xt0fer
  * @version 1.0.0
