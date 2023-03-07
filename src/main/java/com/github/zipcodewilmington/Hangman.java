@@ -2,13 +2,10 @@ package com.github.zipcodewilmington;
 
 //Seth Prentice
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.function.Supplier;
 
 /**
  * @author xt0fer
@@ -21,6 +18,9 @@ public class Hangman {
         new Hangman().play();
     }
 
+    /**
+     * Calls game and repeats it
+     */
     public void play(){
         do{
             game();
@@ -28,6 +28,9 @@ public class Hangman {
         System.out.println("Thanks for playing!");
     }
 
+    /**
+     * Runs the hangman game
+     */
     public void game(){
         String[] word = getWord().split("");
         String[] solved = new String[word.length];
@@ -41,6 +44,11 @@ public class Hangman {
             System.out.println("Current guesses remaining: " + guesses);
             showStatus(solved);
             guess = getGuess("What letter are you guessing?");
+            if(guess.equals("-")){
+                System.out.print("Sad to see you go :(\nThe word was: ");
+                showStatus(word);
+                break;
+            }
             solved = process(word, solved, guess);
             if(checkAns(solved)){
                 showStatus(solved);
@@ -57,6 +65,10 @@ public class Hangman {
 
     }
 
+    /**
+     * Prints out the secret word in a nice format for guessing
+     * @param solved string array
+     */
     private void showStatus(String[] solved) {
         for(String s: solved){
             System.out.print(s);
@@ -65,6 +77,11 @@ public class Hangman {
         System.out.println();
     }
 
+    /**
+     * Checks to see if the word has been fully solved
+     * @param solved string array
+     * @return boolean
+     */
     private boolean checkAns(String[] solved) {
         for(String s : solved){
             if(s.equals("_")){
@@ -74,6 +91,13 @@ public class Hangman {
         return true;
     }
 
+    /**
+     * Puts the character where it was correctly guessed, does nothing for wrong characters
+     * @param word hidden word
+     * @param solved word to be changed
+     * @param guess the character to check against
+     * @return edited string array
+     */
     private String[] process(String[] word, String[] solved, String guess) {
         for(int i = 0; i<word.length; i++){
             if(word[i].equals(guess)){
@@ -83,6 +107,10 @@ public class Hangman {
         return solved;
     }
 
+    /**
+     * gets a random word from the words file
+     * @return a random word
+     */
     public String getWord(){
         try {
             return Files.readAllLines(Paths.get("src/main/java/com/github/zipcodewilmington/words.txt")).get(getRand());
@@ -91,12 +119,21 @@ public class Hangman {
         }
     }
 
+    /**
+     * Gets a guess from the user
+     * @param prompt
+     * @return String
+     */
     public String getGuess(String prompt){
         Scanner in = new Scanner(System.in);
         System.out.println(prompt);
         return String.valueOf(in.nextLine().toLowerCase().charAt(0));
     }
 
+    /**
+     * Helper for getWord(), returns a random number for the file
+     * @return int
+     */
     public int getRand(){
         return (int) (Math.random() * 50);
     }
